@@ -25,6 +25,6 @@ export class User {
   })
   profileImage: string;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isAccess: boolean;
 }
