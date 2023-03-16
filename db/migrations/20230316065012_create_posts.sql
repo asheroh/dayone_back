@@ -1,0 +1,15 @@
+-- migrate:up
+CREATE TABLE posts (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    book_id BIGINT NOT NULL,
+    day_count INT NOT NULL,
+    passage LONGTEXT NOT NULL,
+    comment LONGTEXT NOT NULL,
+    sympathy_count INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)
+
+-- migrate:down
+DROP TABLE posts

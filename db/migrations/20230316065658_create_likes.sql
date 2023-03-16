@@ -1,12 +1,12 @@
 -- migrate:up
-CREATE TABLE users (
+CREATE TABLE likes (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(200) NOT NULL, 
-    profile_image VARCHAR(3000) NULL,
-    social_id BIGINT NULL,
+    user_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL,
+    type VARCHAR(300) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )
 
 -- migrate:down
-DROP TABLE users
+DROP TABLE likes

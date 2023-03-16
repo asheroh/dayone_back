@@ -23,7 +23,3 @@ app.get('/ping', (req: Request, res: Response, next: NextFunction) => {
 });
 
 const PORT = process.env.PORT;
-
-app.listen(PORT, () => {
-  console.log(`${PORT} port is listening`);
-});
