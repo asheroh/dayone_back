@@ -20,6 +20,18 @@ const signup = async (req: Request, res: Response) => {
   }
 };
 
+const kakaoLogin = async (req: Request, res: Response) => {
+  const baseUrl = 'https://kauth.kakao.com/oauth/authorize';
+  const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL;
+  const KAKAO_REST_APIKEY = process.env.KAKAO_REST_APIKEY;
+
+  const addUrl = `?client_id=${KAKAO_REST_APIKEY}&redirect_uri=${KAKAO_REDIRECT_URL}&response_type=code`;
+  const finalUrl = baseUrl + addUrl;
+  console.log(finalUrl);
+  return res.redirect(finalUrl);
+};
+
 export default {
   signup,
+  kakaoLogin,
 };
