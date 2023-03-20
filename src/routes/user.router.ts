@@ -1,5 +1,8 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
+import userController from '../controllers/user.controller';
 
-const userRouter = Router();
+const router: Router = express.Router();
 
-export default userRouter;
+router.post('/signup', userController.signup);
+
+export default { router };
