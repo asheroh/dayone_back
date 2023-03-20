@@ -31,7 +31,29 @@ const kakaoLogin = async (req: Request, res: Response) => {
   return res.redirect(finalUrl);
 };
 
+const kakaoRedirect = async (req: Request, res: Response) => {
+  const baseUrl = `https://kauth.kakao.com/oauth/token`;
+  const redirectConfig = {
+    client_id: process.env.KAKAO_REST_APIKEY,
+    client_secret: process.env.KAKAO_CLIENT_SECRET_KEY,
+    redirect_uri: process.env.KAKAO_REDIRECT_URL,
+    grant_type: 'authorization_code',
+    code: req.query.code,
+  };
+  const configUrl = `?client_id=${redirectConfig.client_id}&client_secret=${redirectConfig.client_secret}&redirect_uri=${redirectConfig.redirect_uri}&grant_type=${redirectConfig.grant_type}&code=${redirectConfig.code}`;
+  const fullUrlQuery = baseUrl + configUrl;
+  const kakaoAccessTokenReq = await fetch(fullUrlQuery, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json',
+    },
+  });
+  const json = await kakaoAccessTokenReq.json();
+  console.log(json);
+  res.send(JSON.stringify(json)); // 프론트엔드에서 확인하려고
+};
 export default {
   signup,
   kakaoLogin,
+  kakaoRedirect,
 };

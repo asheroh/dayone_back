@@ -5,6 +5,6 @@ const router: Router = express.Router();
 
 router.post('/signup', userController.signup);
 router.get('/kakao/start', userController.kakaoLogin);
-router.get('/kakao/redirect', userController.kakaoRedirect);
+router.get('/kakao/finish', userController.kakaoRedirect);
 
 export default { router };
