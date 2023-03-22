@@ -6,10 +6,10 @@ const createUser = async (id: number, email: string): Promise<User> => {
 
   const result: Promise<User> = await dayoneDataSource.query(
     `INSERT INTO users(
-            id,
-            email
-        ) VALUES (?, ?);
-        `,
+          id,
+          email
+      ) VALUES (?, ?);
+      `,
     [id, email],
   );
   return result;
