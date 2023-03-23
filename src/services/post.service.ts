@@ -20,6 +20,12 @@ const createPost = async (
   return newPost;
 };
 
+const getPosts = async (userId: string) => {
+  const posts = postDao.getUserPosts(userId);
+  return posts;
+};
+
 export default {
   createPost,
+  getPosts,
 };

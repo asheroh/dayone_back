@@ -24,6 +24,17 @@ const createPost = async (
   return postResult;
 };
 
+const getUserPosts = async (userId: string): Promise<void> => {
+  const getPostsResult: Promise<void> = await dayoneDataSource.query(
+    `SELECT * FROM posts
+    WHERE user_id = ?;
+      `,
+    [userId],
+  );
+  return getPostsResult;
+};
+
 export default {
   createPost,
+  getUserPosts,
 };
