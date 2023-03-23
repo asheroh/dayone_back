@@ -9,7 +9,7 @@ const createPost = async (
   comment: string,
   sympathy_count: number,
 ): Promise<Post> => {
-  const createPost: Post = await postDao.createPost(
+  const newPost: Post = await postDao.createPost(
     id,
     user_id,
     day_count,
@@ -17,7 +17,7 @@ const createPost = async (
     comment,
     sympathy_count,
   );
-  return createPost;
+  return newPost;
 };
 
 export default {

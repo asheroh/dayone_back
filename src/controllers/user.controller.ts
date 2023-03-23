@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import userService from '../services/user.service';
-
 import { User } from '../interfaces/user.interface';
 
 const signup = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
+
     const { id, email } = req.body as User;
 
     if (!id || !email) {

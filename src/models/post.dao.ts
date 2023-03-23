@@ -10,7 +10,7 @@ const createPost = async (
   sympathy_count: number,
 ): Promise<Post> => {
   const postResult: Promise<Post> = await dayoneDataSource.query(
-    `INSERT INTO users(
+    `INSERT INTO posts (
               id,
               user_id,
               day_count,

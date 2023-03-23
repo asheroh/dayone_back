@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import userRouter from './user.router';
-import postRouter from './user.router';
+import postRouter from './post.router';
 
 const router: Express = express();
 
