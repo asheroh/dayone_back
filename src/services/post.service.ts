@@ -18,12 +18,17 @@ const createPost = async (
   return newPost;
 };
 
-const getPosts = async (userId: string) => {
+const getUserPosts = async (userId: string) => {
   const posts = postDao.getUserPosts(userId);
   return posts;
 };
 
+const getAllPosts = async () => {
+  return await postDao.getAllPosts();
+};
+
 export default {
   createPost,
-  getPosts,
+  getUserPosts,
+  getAllPosts,
 };

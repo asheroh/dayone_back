@@ -29,11 +29,17 @@ const dayPosting = async (req: Request, res: Response) => {
 const getUserPosts = async (req: Request, res: Response) => {
   const userId: string = req.params.userId;
 
-  const getUserPosts = await postService.getPosts(userId);
+  const getUserPosts = await postService.getUserPosts(userId);
   res.status(200).json({ message: getUserPosts });
+};
+
+const getAllPosts = async (req: Request, res: Response) => {
+  const getPosts = await postService.getAllPosts();
+  res.status(200).json(getPosts);
 };
 
 export default {
   dayPosting,
   getUserPosts,
+  getAllPosts,
 };
