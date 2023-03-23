@@ -4,15 +4,14 @@ import postService from '../services/post.service';
 
 const dayPosting = async (req: Request, res: Response) => {
   try {
-    const { id, user_id, day_count, passage, comment, sympathy_count } =
+    const { user_id, day_count, passage, comment, sympathy_count } =
       req.body as Post;
 
-    if (!id || !user_id || !day_count || !passage || !comment) {
+    if (!user_id || !day_count || !passage || !comment) {
       return res.status(409).json({ message: 'KEY_ERROR' });
     }
 
     const createPost: Post = await postService.createPost(
-      id,
       user_id,
       day_count,
       passage,
