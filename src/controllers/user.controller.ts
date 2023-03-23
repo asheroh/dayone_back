@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import axios from 'axios';
 import userService from '../services/user.service';
 import { User } from '../interfaces/user.interface';
 
@@ -49,10 +50,10 @@ const kakaoRedirect = async (req: Request, res: Response) => {
       'Content-type': 'application/json',
     },
   });
-  const json = await kakaoAccessTokenReq.json();
-  console.log(json);
-  res.send(JSON.stringify(json)); // 프론트엔드에서 확인하려고
+  const kakaoAccessToken = await kakaoAccessTokenReq.json();
+  res.json(kakaoAccessToken);
 };
+
 export default {
   signup,
   kakaoLogin,
