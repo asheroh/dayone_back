@@ -24,13 +24,12 @@ const createPost = async (
   return postResult;
 };
 
-const getUserPosts = async (userId: string): Promise<void> => {
-  const getPostsResult: Promise<void> = await dayoneDataSource.query(
-    `SELECT * FROM posts
-    WHERE user_id = ?;
-      `,
-    [userId],
-  );
+const getUserPosts = async (userId: string): Promise<Post> => {
+  const rawQuery = `SELECT * FROM posts
+  WHERE user_id = ?;`;
+  const getPostsResult: Promise<Post> = await dayoneDataSource.query(rawQuery, [
+    userId,
+  ]);
   return getPostsResult;
 };
 
