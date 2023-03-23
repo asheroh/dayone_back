@@ -4,5 +4,5 @@ export interface Post {
   day_count: number;
   passage: string;
   comment: string;
-  sympathy_count: string;
+  sympathy_count: number;
 }

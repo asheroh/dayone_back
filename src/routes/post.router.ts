@@ -3,6 +3,6 @@ import postController from '../controllers/post.controller';
 
 const router: Router = express.Router();
 
-router.post('/signup', postController.signup);
+router.post('/', postController.dayPosting);
 
 export default { router };
