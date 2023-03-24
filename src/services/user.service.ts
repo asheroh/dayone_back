@@ -10,13 +10,12 @@ const kakaoSignin = async (kakaoToken: string) => {
   });
 
   const userData: any = getKakaoInfo.data;
+  console.log(userData, 'wqewqewq');
 
   const kakaoId: number = userData.id;
-  const nickname: string = userData.properties['nickname'];
-  const kakaoEmail = 'kakaotest.com';
-  const profileImage: string = userData.properties['thumbnail_image_url'];
-
-  console.log('!@3213', kakaoId, nickname, kakaoEmail, profileImage);
+  const nickname: string = userData.properties.nickname;
+  const kakaoEmail = userData.kakao_account.email;
+  const profileImage: string = userData.properties.thumbnail_image;
 
   if (!getKakaoInfo) {
     throw new Error('KAKAO_TOKEN_ERROR');
@@ -30,11 +29,6 @@ const kakaoSignin = async (kakaoToken: string) => {
   );
 
   return newUser;
-  //   return jwt.sign({ userId: newUser.insertId }, process.env.SECRET_KEY);
-  // }
-
-  // return jwt.sign({ userId: userId }, process.env.SECRET_KEY);
 };
-// };
 
 export default { kakaoSignin };
