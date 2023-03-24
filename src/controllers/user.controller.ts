@@ -22,7 +22,7 @@ const signup = async (req: Request, res: Response) => {
   }
 };
 
-const kakaoLogin = async (req: Request, res: Response) => {
+const kakaoLoginStart = async (req: Request, res: Response) => {
   const baseUrl = 'https://kauth.kakao.com/oauth/authorize';
   const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL;
   const KAKAO_REST_APIKEY = process.env.KAKAO_REST_APIKEY;
@@ -53,9 +53,22 @@ const kakaoRedirect = async (req: Request, res: Response) => {
   const kakaoAccessToken = await kakaoAccessTokenReq.json();
   res.json(kakaoAccessToken);
 };
+/**
+ * 가입된 회원인지 체크
+ */
+
+const kakaoSignin = async (req: Request, res: Response) => {
+  const kakaoToken: any = req.headers.authorization;
+  if (!kakaoToken) {
+    throw new Error('KAKAO_TOKEN_ERROR');
+  }
+  const accessToken = await userService.kakaoSignin(kakaoToken);
+  return res.status(200).json(accessToken);
+};
 
 export default {
   signup,
-  kakaoLogin,
+  kakaoLoginStart,
   kakaoRedirect,
+  kakaoSignin,
 };

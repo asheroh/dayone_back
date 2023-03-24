@@ -15,4 +15,13 @@ const createUser = async (id: number, email: string): Promise<User> => {
   return result;
 };
 
+const checkUserKakaoId = async (kakaoId) => {
+  const user = await dayoneDataSource.query(
+    `SELECT 
+    u.id,
+    u,email,
+    u.`,
+  );
+};
+
 export default { createUser };
