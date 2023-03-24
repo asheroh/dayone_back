@@ -1,26 +1,6 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import userService from '../services/user.service';
-import { User } from '../interfaces/user.interface';
-
-const signup = async (req: Request, res: Response) => {
-  try {
-    console.log(req.body);
-
-    const { id, email } = req.body as User;
-
-    if (!id || !email) {
-      return res.status(409).json({ message: 'KEY_ERROR' });
-    }
-
-    const newUser = await userService.signup(id, email);
-    res
-      .status(201)
-      .json({ message: 'Created User Successfully', user: newUser });
-  } catch (err: any) {
-    return res.status(err.statusCode || 500).json({ message: err.message });
-  }
-};
 
 const kakaoLoginStart = async (req: Request, res: Response) => {
   const baseUrl = 'https://kauth.kakao.com/oauth/authorize';
@@ -59,6 +39,8 @@ const kakaoRedirect = async (req: Request, res: Response) => {
 
 const kakaoSignin = async (req: Request, res: Response) => {
   const kakaoToken: any = req.headers.authorization;
+  console.log(kakaoToken);
+
   if (!kakaoToken) {
     throw new Error('KAKAO_TOKEN_ERROR');
   }
@@ -67,7 +49,6 @@ const kakaoSignin = async (req: Request, res: Response) => {
 };
 
 export default {
-  signup,
   kakaoLoginStart,
   kakaoRedirect,
   kakaoSignin,

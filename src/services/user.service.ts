@@ -1,39 +1,40 @@
 import axios, { AxiosResponse } from 'axios';
 import userDao from '../models/user.dao';
-import { User } from '../interfaces/user.interface';
-
-const signup = async (id: number, email: string): Promise<User> => {
-  const newUser: User = await userDao.createUser(id, email);
-  return newUser;
-};
 
 const kakaoSignin = async (kakaoToken: string) => {
-  const getKakaoToken = await axios.get('https://kapi.kakao.com/v2/user/me', {
+  const getKakaoInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
     headers: {
-      authorization: `Bearer ${kakaoToken}`,
+      authorization: `${kakaoToken}`,
       'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
     },
   });
 
-  if (!getKakaoToken) {
+  const userData: any = getKakaoInfo.data;
+
+  const kakaoId: number = userData.id;
+  const nickname: string = userData.properties['nickname'];
+  const kakaoEmail = 'kakaotest.com';
+  const profileImage: string = userData.properties['thumbnail_image_url'];
+
+  console.log('!@3213', kakaoId, nickname, kakaoEmail, profileImage);
+
+  if (!getKakaoInfo) {
     throw new Error('KAKAO_TOKEN_ERROR');
   }
 
-  const { userData }: any = getKakaoToken;
-  console.log(userData);
+  const newUser = await userDao.checkUserKakaoId(
+    kakaoId,
+    nickname,
+    kakaoEmail,
+    profileImage,
+  );
 
-  const kakaoId = userData.id;
-  const name = userData.properties.nickname;
-  const email = userData.kakao_account.email;
-  // const userId = await userDao.checkUserKakaoId(kakaoId);
-
-  // if (!userId) {
-  //   const newUser = await userDao.createUser(email, name, kakaoid);
-
+  return newUser;
   //   return jwt.sign({ userId: newUser.insertId }, process.env.SECRET_KEY);
   // }
 
   // return jwt.sign({ userId: userId }, process.env.SECRET_KEY);
 };
+// };
 
-export default { signup, kakaoSignin };
+export default { kakaoSignin };
