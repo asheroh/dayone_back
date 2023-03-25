@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import userDao from '../models/user.dao';
 
 const kakaoSignin = async (kakaoToken: string) => {
@@ -10,11 +10,9 @@ const kakaoSignin = async (kakaoToken: string) => {
   });
 
   const userData: any = getKakaoInfo.data;
-  console.log(userData, 'wqewqewq');
-
   const kakaoId: number = userData.id;
   const nickname: string = userData.properties.nickname;
-  const kakaoEmail = userData.kakao_account.email;
+  const kakaoEmail: string = userData.kakao_account.email;
   const profileImage: string = userData.properties.thumbnail_image;
 
   if (!getKakaoInfo) {
