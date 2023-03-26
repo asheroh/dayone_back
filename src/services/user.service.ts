@@ -9,24 +9,30 @@ const kakaoSignin = async (kakaoToken: string) => {
     },
   });
 
+  if (!getKakaoInfo) {
+    throw new Error('KAKAO_TOKEN_ERROR');
+  }
+
   const userData: any = getKakaoInfo.data;
   const kakaoId: number = userData.id;
   const nickname: string = userData.properties.nickname;
   const kakaoEmail: string = userData.kakao_account.email;
   const profileImage: string = userData.properties.thumbnail_image;
 
-  if (!getKakaoInfo) {
-    throw new Error('KAKAO_TOKEN_ERROR');
+  const checkUser = await userDao.checkUserInfo(kakaoId);
+
+  if (!checkUser) {
+    console.log('DB에 등록되지 않았습니다.');
+    const newUser = await userDao.insertKakaoUserInfo(
+      kakaoId,
+      nickname,
+      kakaoEmail,
+      profileImage,
+    );
+    return newUser;
+  } else {
+    console.log(`Created Successfully Insert Users DB`);
   }
-
-  const newUser = await userDao.checkUserKakaoId(
-    kakaoId,
-    nickname,
-    kakaoEmail,
-    profileImage,
-  );
-
-  return newUser;
 };
 
 export default { kakaoSignin };

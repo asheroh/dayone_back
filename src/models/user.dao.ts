@@ -1,21 +1,20 @@
 import dayoneDataSource from './dayone.data-source';
-import { User } from '../interfaces/user.interface';
 
-const createUser = async (id: number, email: string): Promise<User> => {
-  console.log(id, email);
+// TODO: 카카오 아이디 먼저 받아서 DB에 유저 있는지 없는지 확인
 
-  const result: Promise<User> = await dayoneDataSource.query(
-    `INSERT INTO users(
-          id,
-          email
-      ) VALUES (?, ?);
-      `,
-    [id, email],
+const checkUserInfo = async (kakaoId: number) => {
+  const [user] = await dayoneDataSource.query(
+    `
+    SELECT id
+    FROM users u
+    WHERE u.id = ?;
+    `,
+    [kakaoId],
   );
-  return result;
+  return user ? user.id : null;
 };
 
-const checkUserKakaoId = async (
+const insertKakaoUserInfo = async (
   kakaoId: number,
   nickname: string,
   kakaoEmail: string,
@@ -31,16 +30,6 @@ const checkUserKakaoId = async (
     [kakaoId, kakaoEmail, profileImage, nickname],
   );
   return createNewUser;
-  // const user = await dayoneDataSource.query(
-  //   `SELECT
-  //   u.id,
-  //   u,email,
-  //   u.profile_image,
-  //   u.nickname
-  //   FROM users u`,
-  //   [kakaoId, nickname, kakaoEmail, profileImage],
-  // );
-  // return user;
 };
 
-export default { createUser, checkUserKakaoId };
+export default { insertKakaoUserInfo, checkUserInfo };

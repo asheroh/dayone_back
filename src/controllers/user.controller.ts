@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
+
 import userService from '../services/user.service';
 
 const kakaoLoginStart = async (req: Request, res: Response) => {
