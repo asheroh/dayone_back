@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import authService from '../services/auth.service';
 
-class authC {
+class auth {
   async kakaoLoginStart(req: Request, res: Response) {
     const redirectUrl = authService.getKakaoLoginUrl();
     console.log(redirectUrl);
@@ -26,4 +26,4 @@ class authC {
   }
 }
 
-export default new authC();
+export default new auth();
