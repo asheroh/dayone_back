@@ -13,6 +13,7 @@ class auth {
     const kakaoAccessToken = await authService.getKakaoAccessToken(
       req.query.code as string,
     );
+    res.header('Access-Control-Allow-Origin', '*');
     res.json(kakaoAccessToken);
   }
 
@@ -22,6 +23,7 @@ class auth {
       throw new Error('KAKAO_TOKEN_ERROR');
     }
     const accessToken = await authService.kakaoSignin(kakaoToken);
+    res.header('Access-Control-Allow-Origin', '*');
     return res.status(200).json(accessToken);
   }
 }

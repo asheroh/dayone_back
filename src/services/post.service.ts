@@ -27,6 +27,8 @@ const getAllPosts = async () => {
   return await postDao.getAllPosts();
 };
 
+// const getBookTitle = async () => {};
+
 export default {
   createPost,
   getUserPosts,
