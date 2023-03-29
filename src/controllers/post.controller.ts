@@ -45,13 +45,16 @@ const getAllPosts = async (req: Request, res: Response) => {
 };
 
 const getBookTitle = async (req: Request, res: Response) => {
-  console.log(123);
-  console.log(req.query);
-  const _searchQuery = req.query;
-  const _redirect = 'https://openapi.naver.com/v1/search/book.json';
-  const fullQuery = _redirect + _searchQuery;
+  const queryObject = req.query;
+  const queryArrays = Object.entries(queryObject).map(([key, value]) => [
+    key,
+    String(value),
+  ]);
+  const queryParams = new URLSearchParams(queryArrays).toString();
 
-  res.send(fullQuery);
+  const _redirect = 'https://openapi.naver.com/v1/search/book.json?';
+  const fullQuery = _redirect + queryParams;
+  res.redirect(fullQuery);
 };
 
 export default {
