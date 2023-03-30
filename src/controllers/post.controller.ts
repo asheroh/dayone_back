@@ -45,8 +45,8 @@ const getAllPosts = async (req: Request, res: Response) => {
 };
 
 const getBookTitle = async (req: Request, res: Response) => {
-  const queryObject = req.query;
-  const queryArrays = Object.entries(queryObject).map(([key, value]) => [
+  const bookQueryObject = req.query;
+  const queryArrays = Object.entries(bookQueryObject).map(([key, value]) => [
     key,
     String(value),
   ]);
@@ -54,7 +54,21 @@ const getBookTitle = async (req: Request, res: Response) => {
 
   const _redirect = 'https://openapi.naver.com/v1/search/book.json?';
   const fullQuery = _redirect + queryParams;
-  res.redirect(fullQuery);
+
+  try {
+    const response = await axios.get(fullQuery, {
+      headers: {
+        'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
+        'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET,
+      },
+    });
+    const data = response.data.items;
+    console.log(data);
+
+    res.send(data);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export default {
