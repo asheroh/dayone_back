@@ -13,7 +13,7 @@ class auth {
       req.query.code as string,
     );
     res.header('Access-Control-Allow-Origin', '*');
-    res.json({ access_token: kakaoAccessToken });
+    res.json(kakaoAccessToken);
   }
 
   async kakaoSignin(req: Request, res: Response) {
