@@ -1,10 +1,10 @@
 -- migrate:up
 CREATE TABLE demodays (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     description LONGTEXT NOT NULL,
     location VARCHAR(200) NOT NULL,
-    capacity INT NOT NULL,
+    capacity BIGINT NOT NULL,
     start_registeration_date TIMESTAMP NOT NULL,
     end_registration_date TIMESTAMP,
     event_date DATE NOT NULL,

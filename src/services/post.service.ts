@@ -3,6 +3,7 @@ import postDao from '../models/post.dao';
 
 const createPost = async (
   user_id: number,
+  book_id: number,
   day_count: number,
   passage: string,
   comment: string,
@@ -10,6 +11,7 @@ const createPost = async (
 ): Promise<Post> => {
   const newPost: Post = await postDao.createPost(
     user_id,
+    book_id,
     day_count,
     passage,
     comment,

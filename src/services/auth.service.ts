@@ -1,5 +1,8 @@
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 import authDao from '../models/auth.dao';
+import dotenv from 'dotenv';
+dotenv.config();
 
 class AuthService {
   getKakaoLoginUrl() {
@@ -46,7 +49,10 @@ class AuthService {
     const kakaoEmail: string = userData.kakao_account.email;
     const profileImage: string = userData.properties.thumbnail_image;
 
+    console.log(kakaoId, '아이디 보내는 거');
+
     const checkUser = await authDao.checkUserInfo(kakaoId);
+    console.log(checkUser, '받은 유저');
 
     if (!checkUser) {
       console.log('DB에 등록되지 않았습니다.');
@@ -60,7 +66,23 @@ class AuthService {
 
       return newUser;
     }
-    console.log(`user login successsfully!`);
+    const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+
+    const accessToken = jwt.sign({ id: kakaoId }, JWT_SECRET_KEY as string, {
+      expiresIn: '2240m',
+      issuer: '토큰발급자',
+    });
+
+    console.log(accessToken);
+
+    return accessToken;
+  }
+
+  async getAllUsers() {
+    const getAllUsers = await authDao.getAllUser();
+    console.log('서비스', getAllUsers);
+
+    return getAllUsers;
   }
 }
 

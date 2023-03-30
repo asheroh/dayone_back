@@ -14,7 +14,7 @@ class auth {
       req.query.code as string,
     );
     res.header('Access-Control-Allow-Origin', '*');
-    res.json(kakaoAccessToken);
+    res.json({ access_token: kakaoAccessToken });
   }
 
   async kakaoSignin(req: Request, res: Response) {
@@ -25,6 +25,11 @@ class auth {
     const accessToken = await authService.kakaoSignin(kakaoToken);
     res.header('Access-Control-Allow-Origin', '*');
     return res.status(200).json(accessToken);
+  }
+
+  async getAllUsers(req: Request, res: Response) {
+    const getAllUsers = authService.getAllUsers();
+    res.json(getAllUsers);
   }
 }
 

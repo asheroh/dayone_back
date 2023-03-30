@@ -3,6 +3,7 @@ import { Post } from '../interfaces/post.interface';
 
 const createPost = async (
   user_id: number,
+  book_id: number,
   day_count: number,
   passage: string,
   comment: string,
@@ -11,13 +12,14 @@ const createPost = async (
   const postResult: Promise<Post> = await dayoneDataSource.query(
     `INSERT INTO posts (
               user_id,
+              book_id,
               day_count,
               passage,
               comment,
               sympathy_count
-          ) VALUES (?, ?, ?, ?, ?);
+          ) VALUES (?, ?, ?, ?, ?, ?);
           `,
-    [user_id, day_count, passage, comment, sympathy_count],
+    [user_id, book_id, day_count, passage, comment, sympathy_count],
   );
   return postResult;
 };

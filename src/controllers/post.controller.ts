@@ -5,16 +5,24 @@ import postService from '../services/post.service';
 
 const dayPosting = async (req: Request, res: Response) => {
   try {
-    const { user_id, day_count, passage, comment, sympathy_count } =
+    const { user_id, book_id, day_count, passage, comment, sympathy_count } =
       req.body as Post;
 
-    if (!user_id || !day_count || !passage || !comment) {
-      res.header('Access-Control-Allow-Origin', '*');
-      return res.status(409).json({ message: 'KEY_ERROR' });
-    }
+    // if (
+    //   !user_id ||
+    //   !book_id ||
+    //   !day_count ||
+    //   !passage ||
+    //   !comment ||
+    //   !sympathy_count
+    // ) {
+    //   console.log('123');
+    //   return res.status(409).json({ message: 'KEY_ERROR' });
+    // }
 
     const createPost: Post = await postService.createPost(
       user_id,
+      book_id,
       day_count,
       passage,
       comment,
