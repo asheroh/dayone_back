@@ -4,7 +4,6 @@ import authService from '../services/auth.service';
 class auth {
   async kakaoLoginStart(req: Request, res: Response) {
     const redirectUrl = authService.getKakaoLoginUrl();
-    console.log(redirectUrl);
 
     return res.redirect(redirectUrl);
   }
