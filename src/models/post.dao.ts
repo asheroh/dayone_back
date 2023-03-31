@@ -1,48 +1,51 @@
 import dayoneDataSource from './dayone.data-source';
 import { Post } from '../interfaces/post.interface';
 
-const createPost = async (
-  user_id: number,
-  book_id: number,
-  day_count: number,
-  passage: string,
-  comment: string,
-  sympathy_count: number,
-): Promise<Post> => {
-  const postResult: Promise<Post> = await dayoneDataSource.query(
-    `INSERT INTO posts (
-              user_id,
-              book_id,
-              day_count,
-              passage,
-              comment,
-              sympathy_count
-          ) VALUES (?, ?, ?, ?, ?, ?);
-          `,
-    [user_id, book_id, day_count, passage, comment, sympathy_count],
-  );
-  return postResult;
-};
+class PostDao {
+  public createPost = async (
+    userId: number,
+    bookId: number,
+    dayCount: number,
+    passage: string,
+    comment: string,
+    sympathyCount: number,
+  ): Promise<Post> => {
+    const postResult: Promise<Post> = await dayoneDataSource.query(
+      `INSERT INTO posts (
+                user_id,
+                book_id,
+                day_count,
+                passage,
+                comment,
+                sympathy_count
+            ) VALUES (?, ?, ?, ?, ?, ?);
+            `,
+      [userId, bookId, dayCount, passage, comment, sympathyCount],
+    );
+    return postResult;
+  };
 
-const getUserPosts = async (userId: string): Promise<Post> => {
-  const rawQuery = `SELECT * FROM posts
-  WHERE user_id = ?;`;
-  const getPostsResult: Promise<Post> = await dayoneDataSource.query(rawQuery, [
-    userId,
-  ]);
-  return getPostsResult;
-};
+  public getUserPosts = async (userId: string): Promise<Post[]> => {
+    const rawQuery = `SELECT * FROM posts WHERE user_id = ?;`;
+    const getPostsResult: Promise<Post[]> = await dayoneDataSource.query(
+      rawQuery,
+      [userId],
+    );
+    return getPostsResult;
+  };
 
-const getAllPosts = async () => {
-  const getAllPostRawQuery = `SELECT * FROM posts`;
-  const getAllPostsResult: Promise<void> = await dayoneDataSource.query(
-    getAllPostRawQuery,
-  );
-  return getAllPostsResult;
-};
+  public deletePostById = async (postId: string): Promise<Post> => {
+    const rawQuery = `DELETE FROM posts WHERE id = ?`;
+    return await dayoneDataSource.query(rawQuery, [postId]);
+  };
 
-export default {
-  createPost,
-  getUserPosts,
-  getAllPosts,
-};
+  public getAllPosts = async (): Promise<Post[]> => {
+    const getAllPostRawQuery = `SELECT * FROM posts`;
+    const getAllPostsResult: Promise<Post[]> = await dayoneDataSource.query(
+      getAllPostRawQuery,
+    );
+    return getAllPostsResult;
+  };
+}
+
+export { PostDao };

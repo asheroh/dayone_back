@@ -1,87 +1,77 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import { Post } from '../interfaces/post.interface';
-import postService from '../services/post.service';
+import { PostService } from '../services/post.service';
 
-const dayPosting = async (req: Request, res: Response) => {
-  try {
-    const { user_id, book_id, day_count, passage, comment, sympathy_count } =
-      req.body as Post;
+class PostController {
+  private postService: PostService;
 
-    // if (
-    //   !user_id ||
-    //   !book_id ||
-    //   !day_count ||
-    //   !passage ||
-    //   !comment ||
-    //   !sympathy_count
-    // ) {
-    //   console.log('123');
-    //   return res.status(409).json({ message: 'KEY_ERROR' });
-    // }
-
-    const createPost: Post = await postService.createPost(
-      user_id,
-      book_id,
-      day_count,
-      passage,
-      comment,
-      sympathy_count,
-    );
-    res.header('Access-Control-Allow-Origin', '*');
-    res
-      .status(201)
-      .json({ message: 'Created Successfully Post', Post: createPost });
-  } catch (err: any) {
-    res.header('Access-Control-Allow-Origin', '*');
-    return res.status(err.statusCode || 500).json({ message: err.message });
+  constructor() {
+    this.postService = new PostService();
   }
-};
 
-const getUserPosts = async (req: Request, res: Response) => {
-  const userId: string = req.params.userId;
-
-  const getUserPosts = await postService.getUserPosts(userId);
-  res.header('Access-Control-Allow-Origin', '*');
-  res.status(200).json({ message: getUserPosts });
-};
-
-const getAllPosts = async (req: Request, res: Response) => {
-  const getPosts = await postService.getAllPosts();
-  res.header('Access-Control-Allow-Origin', '*');
-  res.status(200).json(getPosts);
-};
-
-const getBookTitle = async (req: Request, res: Response) => {
-  const bookQueryObject = req.query;
-  const queryArrays = Object.entries(bookQueryObject).map(([key, value]) => [
-    key,
-    String(value),
-  ]);
-  const queryParams = new URLSearchParams(queryArrays).toString();
-
-  const _redirect = 'https://openapi.naver.com/v1/search/book.json?';
-  const fullQuery = _redirect + queryParams;
-
-  try {
-    const response = await axios.get(fullQuery, {
-      headers: {
-        'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
-        'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET,
-      },
-    });
-    const data = response.data.items;
-    console.log(data);
-
-    res.send(data);
-  } catch (error) {
-    console.error(error);
+  private setResponseHeaders(res: Response) {
+    res.header('Access-Control-Allow-Origin', '*');
   }
-};
 
-export default {
-  dayPosting,
-  getUserPosts,
-  getAllPosts,
-  getBookTitle,
-};
+  public createPost = async (req: Request, res: Response) => {
+    try {
+      const post: Post = req.body;
+
+      const newPost: Post = await this.postService.createPost(post);
+      this.setResponseHeaders(res);
+      res
+        .status(201)
+        .json({ message: 'Created Successfully Post', Post: newPost });
+    } catch (err: any) {
+      this.setResponseHeaders(res);
+      return res.status(err.statusCode || 500).json({ message: err.message });
+    }
+  };
+
+  public getUserPosts = async (req: Request, res: Response) => {
+    const userId: string = req.params.userId;
+
+    const userPosts = await this.postService.getUserPosts(userId);
+    this.setResponseHeaders(res);
+    res.status(200).json({ message: userPosts });
+  };
+
+  public deletePostById = async (req: Request, res: Response) => {
+    const postId: string = req.params.postId;
+    await this.postService.deletePostById(postId);
+    res.status(204).json({ message: 'Successfully delete Post' });
+  };
+
+  public getAllPosts = async (req: Request, res: Response) => {
+    const allPosts = await this.postService.getAllPosts();
+    this.setResponseHeaders(res);
+    res.status(200).json(allPosts);
+  };
+
+  public getBookTitle = async (req: Request, res: Response) => {
+    const bookQueryObject = req.query;
+    const queryArrays = Object.entries(bookQueryObject).map(([key, value]) => [
+      key,
+      String(value),
+    ]);
+    const _reqBookQuery = new URLSearchParams(queryArrays).toString();
+    const _redirect = 'https://openapi.naver.com/v1/search/book.json?';
+    const _reqQuery = _redirect + _reqBookQuery;
+
+    try {
+      const response = await axios.get(_reqQuery, {
+        headers: {
+          'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
+          'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET,
+        },
+      });
+      const data = response.data.items;
+      res.send(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+}
+
+export default new PostController();
