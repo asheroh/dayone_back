@@ -20,7 +20,7 @@ class auth {
     }
 
     const accessToken = await authService.kakaoSignin(kakaoToken);
-    res.status(200).json(accessToken);
+    return res.status(200).json({ accessToken: accessToken });
   }
 
   async getAllUsers(req: Request, res: Response) {
