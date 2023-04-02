@@ -12,18 +12,15 @@ class auth {
     const kakaoAccessToken = await authService.getKakaoAccessToken(
       req.query.code as string,
     );
-    res.header('Access-Control-Allow-Origin', '*');
-    res.json(kakaoAccessToken);
-  }
 
-  async kakaoSignin(req: Request, res: Response) {
-    const kakaoToken: any = req.headers.authorization;
+    const kakaoToken: any = kakaoAccessToken.access_token;
+
     if (!kakaoToken) {
       throw new Error('KAKAO_TOKEN_ERROR');
     }
+
     const accessToken = await authService.kakaoSignin(kakaoToken);
-    res.header('Access-Control-Allow-Origin', '*');
-    return res.status(200).json(accessToken);
+    res.status(200).json(accessToken);
   }
 
   async getAllUsers(req: Request, res: Response) {

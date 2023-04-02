@@ -33,6 +33,11 @@ class PostDao {
     );
     return getPostsResult;
   };
+  /**
+   * 여기서 중요한 건, 자신의 기록, 그러니까 userID를 받고 기록을 조회한 다음
+   * 자신이 작성한 기록들을 받아서 그 중에서 셀렉해서 수정해야한다.
+   */
+  // public updatePost = async();
 
   public deletePostById = async (postId: string): Promise<Post> => {
     const rawQuery = `DELETE FROM posts WHERE id = ?`;

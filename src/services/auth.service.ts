@@ -34,7 +34,7 @@ class AuthService {
   async kakaoSignin(kakaoToken: string) {
     const getKakaoInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {
-        authorization: `${kakaoToken}`,
+        authorization: `Bearer ${kakaoToken}`,
         'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
       },
     });
@@ -49,10 +49,7 @@ class AuthService {
     const kakaoEmail: string = userData.kakao_account.email;
     const profileImage: string = userData.properties.thumbnail_image;
 
-    console.log(kakaoId, '아이디 보내는 거');
-
     const checkUser = await authDao.checkUserInfo(kakaoId);
-    console.log(checkUser, '받은 유저');
 
     if (!checkUser) {
       console.log('DB에 등록되지 않았습니다.');
@@ -72,8 +69,6 @@ class AuthService {
       expiresIn: '2240m',
       issuer: '토큰발급자',
     });
-
-    console.log(accessToken);
 
     return accessToken;
   }

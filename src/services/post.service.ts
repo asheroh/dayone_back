@@ -26,6 +26,17 @@ class PostService {
     return posts;
   };
 
+  // public updatePostById = async (post: Post) => {
+  //   const { bookId, dayCount, passage, comment } = post;
+  //   const updatePost: Post = await this.postDao.updatePost(
+  //     bookId,
+  //     dayCount,
+  //     passage,
+  //     comment,
+  //   );
+  //   return updatePost;
+  // };
+
   public deletePostById = async (postId: string) => {
     const post = this.postDao.deletePostById(postId);
     return post;

@@ -29,7 +29,7 @@ class PostController {
     }
   };
 
-  public getUserPosts = async (req: Request, res: Response) => {
+  public getUserPosts = async (req: Request, res: Response): Promise<void> => {
     const userId: string = req.params.userId;
 
     const userPosts = await this.postService.getUserPosts(userId);
@@ -37,7 +37,19 @@ class PostController {
     res.status(200).json({ message: userPosts });
   };
 
-  public deletePostById = async (req: Request, res: Response) => {
+  // public updatePostById = async (
+  //   req: Request,
+  //   res: Response,
+  // ): Promise<void> => {
+  //   const post: Post = req.body;
+  //   const updatePost: Post = await this.postService.updatePostById(post);
+  //   res.status(200).json({ message: 'Successfully Update Post' });
+  // };
+
+  public deletePostById = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
     const postId: string = req.params.postId;
     await this.postService.deletePostById(postId);
     res.status(204).json({ message: 'Successfully delete Post' });
