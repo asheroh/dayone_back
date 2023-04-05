@@ -12,22 +12,17 @@ class auth {
   async getKakakoAuthorize(req: Request, res: Response) {
     const kakaoCode = req.query.code;
     console.log(kakaoCode);
-    return kakaoCode;
+    return kakaoCode as string;
   }
 
   async kakaoRedirect(req: Request, res: Response) {
     const kakaoCode = await this.getKakakoAuthorize(req, res);
-    console.log(kakaoCode, 1232);
+    const kakaoAccessToken = await authService.getKakaoAccessToken(kakaoCode);
 
-    const kakaoAccessToken = await authService.getKakaoAccessToken(
-      req.headers.authorization as string,
-    );
-
-    const kakaoToken: any = req.headers.authorization;
-    if (!kakaoToken) {
+    if (!kakaoAccessToken) {
       throw new Error('KAKAO_TOKEN_ERROR');
     }
-    const accessToken = await authService.kakaoSignin(kakaoToken);
+    const accessToken = await authService.kakaoSignin(kakaoAccessToken);
     return res.status(200).json({ accessToken: accessToken });
   }
 

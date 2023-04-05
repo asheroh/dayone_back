@@ -66,7 +66,7 @@ class AuthService {
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
     const accessToken = jwt.sign({ id: kakaoId }, JWT_SECRET_KEY as string, {
-      expiresIn: '2240m',
+      expiresIn: '1000000m',
       issuer: '토큰발급자',
     });
 
