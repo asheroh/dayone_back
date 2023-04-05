@@ -53,20 +53,18 @@ class AuthService {
 
     if (!checkUser) {
       console.log('DB에 등록되지 않았습니다.');
-      const newUser = await authDao.insertKakaoUserInfo(
+      await authDao.insertKakaoUserInfo(
         kakaoId,
         nickname,
         kakaoEmail,
         profileImage,
       );
       console.log(`Created Successfully Insert Users DB`);
-
-      return newUser;
     }
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
     const accessToken = jwt.sign({ id: kakaoId }, JWT_SECRET_KEY as string, {
-      expiresIn: '1000000m',
+      expiresIn: '14400000m',
       issuer: '토큰발급자',
     });
 
