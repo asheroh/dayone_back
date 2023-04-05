@@ -12,11 +12,13 @@ class auth {
   async getKakakoAuthorize(req: Request, res: Response) {
     const kakaoCode = req.query.code;
     console.log(kakaoCode);
-
     return kakaoCode;
   }
 
   async kakaoRedirect(req: Request, res: Response) {
+    const kakaoCode = await this.getKakakoAuthorize(req, res);
+    console.log(kakaoCode, 1232);
+
     const kakaoAccessToken = await authService.getKakaoAccessToken(
       req.headers.authorization as string,
     );
