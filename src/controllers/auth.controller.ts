@@ -9,23 +9,31 @@ class auth {
   //   return res.redirect(redirectUrl);
   // }
 
-  async getKakakoCode(req: Request, res: Response) {
-    const kakaoCode = req.query.code;
-    console.log(kakaoCode);
-    return kakaoCode as string;
-  }
   async getAccessToken(req: Request, res: Response) {
-    const kakaoCode = await this.getKakakoCode(req, res);
+    const kakaoCode = req.query.code as string;
     console.log(kakaoCode);
 
-    const kakaoAccessToken = await authService.getKakaoAccessToken(kakaoCode);
+    const kakaoTokenResponse = await authService.getKakaoAccessToken(kakaoCode);
+    const kakaoAccessToken = kakaoTokenResponse.access_token as string;
+
+    console.log(kakaoAccessToken, 123);
 
     if (!kakaoAccessToken) {
       throw new Error('KAKAO_TOKEN_ERROR');
     }
 
     const accessToken = await authService.kakaoSignin(kakaoAccessToken);
-    return res.status(200).json({ accessToken: accessToken });
+
+    // Set the access token as a cookie
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Set 'secure' to true in production
+      maxAge: 86400 * 1000, // 1 day in milliseconds
+    });
+
+    // Send a response indicating success
+    return res.status(200).json({ message: 'Access token set as a cookie' });
   }
 
   async getAllUsers(req: Request, res: Response) {

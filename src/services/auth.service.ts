@@ -32,6 +32,8 @@ class AuthService {
   }
 
   async kakaoSignin(kakaoToken: string) {
+    console.log(kakaoToken, '카카오 토큰');
+
     const getKakaoInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {
         authorization: `Bearer ${kakaoToken}`,
