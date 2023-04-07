@@ -7,3 +7,10 @@ export interface Post {
   comment: string;
   sympathyCount: number;
 }
+
+export interface Like {
+  id: number;
+  userId: number;
+  postId: number;
+  type: string;
+}

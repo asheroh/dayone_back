@@ -84,6 +84,12 @@ class PostController {
       console.error(error);
     }
   };
+
+  public addPostLike = async (req: Request, res: Response) => {
+    const { userId, postId, type } = req.body;
+    await this.postService.addPostLike(userId, postId, type);
+    return res.status(201).json({ message: 'successfully like request' });
+  };
 }
 
 export default new PostController();

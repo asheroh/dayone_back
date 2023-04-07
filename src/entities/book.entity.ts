@@ -1,10 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-// @Entity()
-// export class books {
-//   @PrimaryGeneratedColumn()
-//   id: number;
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-//   @Column({ length: 500 })
-//   name: string;
-// }
+  @Column()
+  social_id!: bigint;
+
+  @Column()
+  email!: string;
+
+  @Column()
+  nickname!: string;
+
+  @Column()
+  access_user!: string;
+
+  @Column()
+  profile_image!: string;
+
+  @Column()
+  day_count!: number;
+}

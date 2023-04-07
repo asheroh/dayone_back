@@ -1,5 +1,5 @@
 import dayoneDataSource from './dayone.data-source';
-import { Post } from '../interfaces/post.interface';
+import { Like, Post } from '../interfaces/post.interface';
 
 class PostDao {
   public createPost = async (
@@ -50,6 +50,28 @@ class PostDao {
       getAllPostRawQuery,
     );
     return getAllPostsResult;
+  };
+
+  public addPostLike = async (
+    userId: number,
+    postId: number,
+    type: string,
+  ): Promise<void> => {
+    await dayoneDataSource.query(
+      `
+    INSERT INTO likes (
+      user_id,
+      post_id,
+      type
+    ) VALUES (?, ?, ?);
+    `,
+      [userId, postId, type],
+    );
+
+    await dayoneDataSource.query(
+      'UPDATE posts SET sympathy_count = sympathy_count + 1 WHERE id =?',
+      [postId],
+    );
   };
 }
 

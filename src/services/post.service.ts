@@ -1,3 +1,4 @@
+import { InsertValuesMissingError } from 'typeorm';
 import { Post } from '../interfaces/post.interface';
 import { PostDao } from '../models/post.dao';
 
@@ -44,6 +45,14 @@ class PostService {
 
   public getAllPosts = async () => {
     return await this.postDao.getAllPosts();
+  };
+
+  public addPostLike = async (userId: number, postId: number, type: string) => {
+    if (!userId || !postId) {
+      throw new InsertValuesMissingError();
+    }
+    const addPostLike = await this.postDao.addPostLike(userId, postId, type);
+    return addPostLike;
   };
 }
 
