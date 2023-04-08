@@ -2,16 +2,20 @@ import { Request, Response } from 'express';
 import authService from '../services/auth.service';
 
 class auth {
-  // async kakaoLoginStart(req: Request, res: Response) {
-  //   const redirectUrl = authService.getKakaoLoginUrl();
-  //   console.log(redirectUrl);
-  //   res.header('Access-Control-Allow-Origin', '*');
-  //   return res.redirect(redirectUrl);
-  // }
+  // 백엔드 테스트
+  async kakaoLoginStart(req: Request, res: Response) {
+    const redirectUrl = authService.getKakaoLoginUrl();
+    console.log(redirectUrl);
+    res.redirect(redirectUrl);
+  }
+  // 백엔드 테스트
+  async kakaoAuthCode(req: Request, res: Response) {
+    const kakaoAuthCode = req.query.code;
+    res.json({ kakaoAuthCode: kakaoAuthCode });
+  }
 
   async getAccessToken(req: Request, res: Response) {
-    const kakaoCode = req.query.code as string;
-    console.log(kakaoCode);
+    const kakaoCode: any = req.headers.authorization?.split(' ')[1];
 
     const kakaoTokenResponse = await authService.getKakaoAccessToken(kakaoCode);
     const kakaoAccessToken = kakaoTokenResponse.access_token as string;
@@ -23,12 +27,12 @@ class auth {
     }
 
     const accessToken = await authService.kakaoSignin(kakaoAccessToken);
+    console.log(accessToken);
 
     // Set the access token as a cookie
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Set 'secure' to true in production
       maxAge: 86400 * 1000, // 1 day in milliseconds
     });
 
@@ -39,7 +43,6 @@ class auth {
   async getAllUsers(req: Request, res: Response) {
     const getAllUsers = authService.getAllUsers();
     res.header('Access-Control-Allow-Origin', '*');
-
     res.json(getAllUsers);
   }
 }

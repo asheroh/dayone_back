@@ -1,5 +1,5 @@
 import dayoneDataSource from './dayone.data-source';
-import { Like, Post } from '../interfaces/post.interface';
+import { Post } from '../interfaces/post.interface';
 
 class PostDao {
   public createPost = async (
@@ -9,8 +9,10 @@ class PostDao {
     passage: string,
     comment: string,
     sympathyCount: number,
-  ): Promise<Post> => {
-    const postResult: Promise<Post> = await dayoneDataSource.query(
+  ): Promise<void> => {
+    console.log('됨?');
+
+    const postResult: Promise<void> = await dayoneDataSource.query(
       `INSERT INTO posts (
                 user_id,
                 book_id,
@@ -22,7 +24,15 @@ class PostDao {
             `,
       [userId, bookId, dayCount, passage, comment, sympathyCount],
     );
-    return postResult;
+    console.log('됨?');
+
+    const addDayCount: Promise<void> = await dayoneDataSource.query(
+      `UPDATE users
+      SET day_count = day_count + 1
+      WHERE id = ?;
+      `,
+      [userId],
+    );
   };
 
   public getUserPosts = async (userId: string): Promise<Post[]> => {
@@ -68,8 +78,20 @@ class PostDao {
       [userId, postId, type],
     );
 
+    // sympathy_count를 1 증가
     await dayoneDataSource.query(
       'UPDATE posts SET sympathy_count = sympathy_count + 1 WHERE id =?',
+      [postId],
+    );
+  };
+
+  public deletePostLike = async (postId: string): Promise<void> => {
+    await dayoneDataSource.query(
+      `
+      DELETE FROM likes
+      WHERE post_id = ?
+        AND user_id = ?
+      ;`,
       [postId],
     );
   };

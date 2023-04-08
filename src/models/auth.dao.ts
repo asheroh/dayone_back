@@ -5,7 +5,7 @@ class AuthDao {
   async checkUserInfo(kakaoId: number) {
     const [user] = await dayoneDataSource.query(
       `
-      SELECT *
+      SELECT id
       FROM users
       WHERE social_id = ?;
       `,
@@ -30,7 +30,15 @@ class AuthDao {
       ) VALUES (?,?,?,?)`,
       [kakaoId, kakaoEmail, profileImage, nickname],
     );
-    return createNewUser;
+
+    const getUserPrimaryKey = await dayoneDataSource.query(
+      `
+      SELECT id
+      FROM users u
+      WHERE social_id = ?;`,
+      [kakaoId],
+    );
+    return getUserPrimaryKey;
   }
 
   async getAllUser() {

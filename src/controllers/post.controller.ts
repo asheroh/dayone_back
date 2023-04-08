@@ -18,7 +18,7 @@ class PostController {
     try {
       const post: Post = req.body;
 
-      const newPost: Post = await this.postService.createPost(post);
+      const newPost = await this.postService.createPost(post);
       this.setResponseHeaders(res);
       res
         .status(201)
@@ -58,7 +58,7 @@ class PostController {
   public getAllPosts = async (req: Request, res: Response) => {
     const allPosts = await this.postService.getAllPosts();
     this.setResponseHeaders(res);
-    res.status(200).json(allPosts);
+    res.status(200).json({ message: '모든 기록 조회 성공' });
   };
 
   public getBookTitle = async (req: Request, res: Response) => {
@@ -89,6 +89,12 @@ class PostController {
     const { userId, postId, type } = req.body;
     await this.postService.addPostLike(userId, postId, type);
     return res.status(201).json({ message: 'successfully like request' });
+  };
+
+  public deletePostLike = async (req: Request, res: Response) => {
+    const { postId } = req.params;
+    await this.postService.deletePostLike(postId);
+    return res.status(204);
   };
 }
 

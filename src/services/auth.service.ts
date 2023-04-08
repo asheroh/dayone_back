@@ -52,17 +52,21 @@ class AuthService {
     const profileImage: string = userData.properties.thumbnail_image;
 
     const checkUser = await authDao.checkUserInfo(kakaoId);
+    let userPrimaryKey = checkUser.id;
 
     if (!checkUser) {
       console.log('DB에 등록되지 않았습니다.');
-      await authDao.insertKakaoUserInfo(
+      const newUser = await authDao.insertKakaoUserInfo(
         kakaoId,
         nickname,
         kakaoEmail,
         profileImage,
       );
+      userPrimaryKey = newUser.id;
       console.log(`Created Successfully Insert Users DB`);
     }
+    console.log(userPrimaryKey.id, '유저의 prikey');
+
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
     const accessToken = jwt.sign({ id: kakaoId }, JWT_SECRET_KEY as string, {

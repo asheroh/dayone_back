@@ -9,9 +9,9 @@ class PostService {
     this.postDao = new PostDao();
   }
 
-  public createPost = async (post: Post): Promise<Post> => {
+  public createPost = async (post: Post): Promise<void> => {
     const { userId, bookId, dayCount, passage, comment, sympathyCount } = post;
-    const newPost: Post = await this.postDao.createPost(
+    const newPost = await this.postDao.createPost(
       userId,
       bookId,
       dayCount,
@@ -19,7 +19,6 @@ class PostService {
       comment,
       sympathyCount,
     );
-    return newPost;
   };
 
   public getUserPosts = async (userId: string) => {
@@ -53,6 +52,11 @@ class PostService {
     }
     const addPostLike = await this.postDao.addPostLike(userId, postId, type);
     return addPostLike;
+  };
+
+  public deletePostLike = async (postId: string) => {
+    const deletePostLike = await this.postDao.deletePostLike(postId);
+    return deletePostLike;
   };
 }
 
