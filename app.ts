@@ -17,12 +17,11 @@ export const createApp = () => {
 
   app.use(routes);
 
+  app.get('/ping', (req: Request, res: Response) => {
+    res.send('hello world');
+  });
+
   return app;
 };
-
-// health check
-app.get('/ping', (req: Request, res: Response, next: NextFunction) => {
-  res.send('hello world');
-});
 
 const PORT = process.env.PORT;
