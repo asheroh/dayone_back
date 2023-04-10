@@ -32,8 +32,6 @@ class AuthService {
   }
 
   async kakaoSignin(kakaoToken: string) {
-    console.log(kakaoToken, '카카오 토큰');
-
     const getKakaoInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {
         authorization: `Bearer ${kakaoToken}`,
@@ -65,15 +63,17 @@ class AuthService {
       userPrimaryKey = newUser.id;
       console.log(`Created Successfully Insert Users DB`);
     }
-    console.log(userPrimaryKey.id, '유저의 prikey');
 
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-    const accessToken = jwt.sign({ id: kakaoId }, JWT_SECRET_KEY as string, {
-      expiresIn: '14400000m',
-      issuer: '토큰발급자',
-    });
-
+    const accessToken = jwt.sign(
+      { id: userPrimaryKey },
+      JWT_SECRET_KEY as string,
+      {
+        expiresIn: '14400000m',
+        issuer: 'DAY_ONE_OWNER',
+      },
+    );
     return accessToken;
   }
 

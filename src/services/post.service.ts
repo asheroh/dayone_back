@@ -1,3 +1,4 @@
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { InsertValuesMissingError } from 'typeorm';
 import { Post } from '../interfaces/post.interface';
 import { PostDao } from '../models/post.dao';
@@ -46,18 +47,26 @@ class PostService {
     return await this.postDao.getAllPosts();
   };
 
-  public addPostLike = async (userId: number, postId: number, type: string) => {
+  public addPostLike = async (userId: number, postId: number) => {
     if (!userId || !postId) {
       throw new InsertValuesMissingError();
     }
-    const addPostLike = await this.postDao.addPostLike(userId, postId, type);
+    const addPostLike = await this.postDao.addPostLike(userId, postId);
     return addPostLike;
   };
 
-  public deletePostLike = async (postId: string) => {
-    const deletePostLike = await this.postDao.deletePostLike(postId);
+  public async deletePostLike(postId: string, accessToken: any) {
+    console.log(accessToken, '12312312');
+
+    if (!postId || !accessToken) {
+      throw new InsertValuesMissingError();
+    }
+    const SECRET_KEY = process.env.JWT_SECRET_KEY as string;
+    const { id } = (await jwt.verify(accessToken, SECRET_KEY)) as JwtPayload;
+
+    const deletePostLike = await this.postDao.deletePostLike(postId, id);
     return deletePostLike;
-  };
+  }
 }
 
 export { PostService };

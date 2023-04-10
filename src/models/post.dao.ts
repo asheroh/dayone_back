@@ -65,17 +65,15 @@ class PostDao {
   public addPostLike = async (
     userId: number,
     postId: number,
-    type: string,
   ): Promise<void> => {
     await dayoneDataSource.query(
       `
     INSERT INTO likes (
       user_id,
-      post_id,
-      type
-    ) VALUES (?, ?, ?);
+      post_id
+    ) VALUES (?, ?);
     `,
-      [userId, postId, type],
+      [userId, postId],
     );
 
     // sympathy_count를 1 증가
@@ -85,14 +83,14 @@ class PostDao {
     );
   };
 
-  public deletePostLike = async (postId: string): Promise<void> => {
+  public deletePostLike = async (postId: string, id: string): Promise<void> => {
     await dayoneDataSource.query(
       `
       DELETE FROM likes
       WHERE post_id = ?
         AND user_id = ?
       ;`,
-      [postId],
+      [postId, id],
     );
   };
 }

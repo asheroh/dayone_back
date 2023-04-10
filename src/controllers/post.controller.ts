@@ -86,15 +86,18 @@ class PostController {
   };
 
   public addPostLike = async (req: Request, res: Response) => {
-    const { userId, postId, type } = req.body;
-    await this.postService.addPostLike(userId, postId, type);
+    const { userId, postId } = req.body;
+    await this.postService.addPostLike(userId, postId);
     return res.status(201).json({ message: 'successfully like request' });
   };
 
   public deletePostLike = async (req: Request, res: Response) => {
     const { postId } = req.params;
-    await this.postService.deletePostLike(postId);
-    return res.status(204);
+
+    const accessToken = req.headers.cookie?.split('=')[1];
+
+    await this.postService.deletePostLike(postId, accessToken);
+    return res.status(204).json({ message: 'Successfully delete like' });
   };
 }
 
