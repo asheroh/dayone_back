@@ -15,7 +15,7 @@ class auth {
   }
 
   async getAccessToken(req: Request, res: Response) {
-    const kakaoCode: any = req.headers.authorization?.split(' ')[1];
+    const kakaoCode: any = req.query.code;
 
     const kakaoTokenResponse = await authService.getKakaoAccessToken(kakaoCode);
     const kakaoAccessToken = kakaoTokenResponse.access_token as string;
@@ -30,6 +30,7 @@ class auth {
     // Set the access token as a cookie
 
     res
+      .status(200)
       .cookie('accessToken', accessToken, {
         httpOnly: true,
         maxAge: 86400 * 1000, // 1 day in milliseconds

@@ -5,7 +5,7 @@ import auth from '../middlewares/auth';
 const router: Router = express.Router();
 
 // 데이기록
-router.post('/', postController.createPost); // 데이기록 작성
+router.post('/', postController.createPost);
 router.get('/all', auth.validateToken, postController.getAllPosts); // 전체 유저들의 기록 가져오기
 // router.get('/best', postController.getBestPosts);
 
