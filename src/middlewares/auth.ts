@@ -7,12 +7,15 @@ const validateToken = async (
   next: NextFunction,
 ) => {
   try {
-    const token = req.headers.authorization;
+    
+    const token = req.headers.cookie?.split("=")[1].split(";")[0]
+    console.log(token,"밸리데이션");
+
+
     if (!token) {
       return res.status(401).json({ message: 'TOKEN NOT FOUND' });
     }
 
-    const authToken = token.slice(7);
 
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -22,7 +25,7 @@ const validateToken = async (
       );
     }
 
-    const decoded = await jwt.verify(authToken, JWT_SECRET_KEY);
+    const decoded = await jwt.verify(token, JWT_SECRET_KEY);
     console.log(decoded, '검증 결과값');
 
     next();

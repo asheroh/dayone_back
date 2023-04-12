@@ -5,7 +5,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 class AuthService {
-  getKakaoLoginUrl() {
+
+  public isUser = async(userId:string) => {
+    const user = await authDao.isUser(userId);
+    return user.nickname;
+  }
+
+  public getKakaoLoginUrl = () => {
     const baseUrl = 'https://kauth.kakao.com/oauth/authorize';
     const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL;
     const KAKAO_REST_APIKEY = process.env.KAKAO_REST_APIKEY;
@@ -15,7 +21,7 @@ class AuthService {
     return finalUrl;
   }
 
-  async getKakaoAccessToken(code: string) {
+  public getKakaoAccessToken = async (code: string) => {
     const baseUrl = `https://kauth.kakao.com/oauth/token`;
     const redirectConfig = {
       client_id: process.env.KAKAO_REST_APIKEY,
@@ -31,7 +37,7 @@ class AuthService {
     return kakaoAccessToken;
   }
 
-  async kakaoSignin(kakaoToken: string) {
+  public kakaoSignin = async (kakaoToken: string) => {
     const getKakaoInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {
         authorization: `Bearer ${kakaoToken}`,
@@ -50,6 +56,7 @@ class AuthService {
     const profileImage: string = userData.properties.thumbnail_image;
 
     const checkUser = await authDao.checkUserInfo(kakaoId);
+    let userPrimaryKey
 
     if (!checkUser) {
       console.log('DB에 등록되지 않았습니다.');
@@ -59,21 +66,26 @@ class AuthService {
         kakaoEmail,
         profileImage,
       );
+      userPrimaryKey = newUser.id;
       console.log(`Created Successfully Insert Users DB`);
-
-      return newUser;
+    } else {
+      userPrimaryKey = checkUser.id;
     }
+
     const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-    const accessToken = jwt.sign({ id: kakaoId }, JWT_SECRET_KEY as string, {
-      expiresIn: '2240m',
-      issuer: '토큰발급자',
-    });
-
+    const accessToken = jwt.sign(
+      { id: userPrimaryKey },
+      JWT_SECRET_KEY as string,
+      {
+        expiresIn: '14400000m',
+        issuer: 'DAY_ONE_OWNER',
+      },
+    );
     return accessToken;
   }
 
-  async getAllUsers() {
+  public getAllUsers = async () => {
     const getAllUsers = await authDao.getAllUser();
     console.log('서비스', getAllUsers);
 
