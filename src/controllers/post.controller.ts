@@ -1,25 +1,21 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
+import { CustomSession } from '../interfaces/CustomSession';
 import { Post } from '../interfaces/post.interface';
-import { PostService } from '../services/post.service';
+import PostService from '../services/post.service';
 
 class PostController {
-  private postService: PostService;
-
-  constructor() {
-    this.postService = new PostService();
-  }
 
   private setResponseHeaders(res: Response) {
     res.header('Access-Control-Allow-Origin', '*');
   }
 
   public createPost = async (req: Request, res: Response) => {
-    try {
-      const post: Post = req.body;
-
-      const newPost = await this.postService.createPost(post);
-      this.setResponseHeaders(res);
+    try {      
+      const { bookId, dayCount, passage, comment }:Post = req.body;
+      // 공감 카운트는 데이기록 등록시 default value = 0
+      const userId: string = req.session.id
+      const newPost = await PostService.createPost(userId, bookId, dayCount, passage, comment );
       res
         .status(201)
         .json({ message: 'Created Successfully Post', Post: newPost });
@@ -32,8 +28,7 @@ class PostController {
   public getUserPosts = async (req: Request, res: Response): Promise<void> => {
     const userId: string = req.params.userId;
 
-    const userPosts = await this.postService.getUserPosts(userId);
-    this.setResponseHeaders(res);
+    const userPosts = await PostService.getUserPosts(userId);
     res.status(200).json({ message: userPosts });
   };
 
@@ -42,7 +37,7 @@ class PostController {
   //   res: Response,
   // ): Promise<void> => {
   //   const post: Post = req.body;
-  //   const updatePost: Post = await this.postService.updatePostById(post);
+  //   const updatePost: Post = await this.PostService.updatePostById(post);
   //   res.status(200).json({ message: 'Successfully Update Post' });
   // };
 
@@ -51,14 +46,14 @@ class PostController {
     res: Response,
   ): Promise<void> => {
     const postId: string = req.params.postId;
-    await this.postService.deletePostById(postId);
+    await PostService.deletePostById(postId);
     res.status(204).json({ message: 'Successfully delete Post' });
   };
 
   public getAllPosts = async (req: Request, res: Response) => {
-    const allPosts = await this.postService.getAllPosts();
-    this.setResponseHeaders(res);
-    res.status(200).json({ message: '모든 기록 조회 성공' });
+    const allPosts = await PostService.getAllPosts();
+
+    res.status(200).json({ message: '모든 기록 조회 성공', data:allPosts });
   };
 
   public getBookTitle = async (req: Request, res: Response) => {
@@ -79,15 +74,18 @@ class PostController {
         },
       });
       const data = response.data.items;
-      res.send(data);
+      res.status(200).json({message: "책 제목 불러오기 성공", data})
     } catch (error) {
       console.error(error);
     }
   };
 
   public addPostLike = async (req: Request, res: Response) => {
-    const { userId, postId } = req.body;
-    await this.postService.addPostLike(userId, postId);
+    const { postId } = req.body;
+    const userId = (req.session as CustomSession).userId as string
+    console.log(userId, "post controller");
+    
+    await PostService.addPostLike(userId, postId);
     return res.status(201).json({ message: 'successfully like request' });
   };
 
@@ -96,7 +94,7 @@ class PostController {
 
     const accessToken = req.headers.cookie?.split('=')[1];
 
-    await this.postService.deletePostLike(postId, accessToken);
+    await PostService.deletePostLike(postId, accessToken);
     return res.status(204).json({ message: 'Successfully delete like' });
   };
 }

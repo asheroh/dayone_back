@@ -4,7 +4,7 @@ import postRouter from './post.route';
 
 const router: Express = express();
 
-router.use('/', authRouter.router);
-router.use('/posts', postRouter.router);
+router.use('/v1', authRouter.router);
+router.use('/v1/posts', postRouter.router);
 
 export default router;

@@ -2,7 +2,22 @@ import { all } from 'axios';
 import dayoneDataSource from './dayone.data-source';
 
 class AuthDao {
-  async checkUserInfo(kakaoId: number) {
+
+  public isUser = async (userId:string) => {
+    const queryRunner = await dayoneDataSource.createQueryRunner()
+    await queryRunner.connect()
+
+    const [user] = await queryRunner.query(`
+      SELECT nickname
+      FROM users
+      WHERE id = ?;`,
+      [userId])
+
+      console.log([user],"DAO");
+      
+    return user
+  } 
+  public checkUserInfo = async (kakaoId: number) => {
     const [user] = await dayoneDataSource.query(
       `
       SELECT id
@@ -15,12 +30,12 @@ class AuthDao {
     return user;
   }
 
-  async insertKakaoUserInfo(
+  public insertKakaoUserInfo = async (
     kakaoId: number,
     nickname: string,
     kakaoEmail: string,
     profileImage: string,
-  ) {
+  ) => {
     const createNewUser = await dayoneDataSource.query(
       `INSERT INTO users (
         social_id,
@@ -41,7 +56,7 @@ class AuthDao {
     return getUserPrimaryKey;
   }
 
-  async getAllUser() {
+  public getAllUser = async () => {
     const allUserInfo = await dayoneDataSource.query(
       `SELECT * 
       FROM users;
